@@ -1,0 +1,14 @@
+.info {
+	color: green;
+	font-weight: bold;
+}
+
+.alert {
+	color: orange;
+	font-weight: bold;
+}
+
+.error {
+	color: red;
+	font-weight: bold;
+}
