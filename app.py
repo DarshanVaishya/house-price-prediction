@@ -7,7 +7,6 @@ from passlib.hash import sha512_crypt
 # TODO: Re-add the login requirement to the submit data page.
 # TODO: Implement the accept or reject page of the data page for admin
 # TODO: Implement addition of user submitted data into the database
-# TODO: 
 
 app = Flask(__name__)
 app.secret_key = "b'J\xcb\x01V{/4\xab\x1e\xd5\xbd\xbb\x9b\xe2\xba\xc0'"
@@ -118,13 +117,16 @@ def logout():
 
 @app.route('/display')
 def display():
-    if 'username' in session:
-        connection, cursor = createConnection()
-        result = executeQuery("SELECT * FROM data;", connection, cursor)
-        return render_template('display.html', disp="active", data=result)
-    else:
-        flash("User must be logged in to access that page.", 'alert')
-        return redirect('/login')
+    # if 'username' in session:
+    #     connection, cursor = createConnection()
+    #     result = executeQuery("SELECT * FROM data;", connection, cursor)
+    # data = 0
+    with open('static/test.csv', 'r') as f:
+        data = [x.split(',') for x in f.read().split('\n')]
+    return render_template('display.html', disp="active", data=data)
+    # else:
+    #     flash("User must be logged in to access that page.", 'alert')
+    #     return redirect('/login')
 
 def predict_value(area: list, house_type: list, BHK: int, sqft: int) -> str:
     """Runs the ML model for given set of parameters and returns the predicted value"""
