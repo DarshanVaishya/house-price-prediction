@@ -5,12 +5,25 @@ import pymysql
 from passlib.hash import sha512_crypt
 
 # TODO: Re-add the login requirement to the submit data page.
-# TODO: Implement the accept or reject page of the data page for admin
+# TODO: Implement the accept or reject logic
 # TODO: Implement addition of user submitted data into the database
 
 app = Flask(__name__)
 app.secret_key = "b'J\xcb\x01V{/4\xab\x1e\xd5\xbd\xbb\x9b\xe2\xba\xc0'"
 model, types, columns = 0, 0, 0
+
+
+# New UI
+@app.route('/test')
+def test():
+    return render_template('index.html')
+@app.route('/generic')
+def generic():
+    return render_template("generic.html")
+@app.route('/elements')
+def elements():
+    return render_template("elements.html")
+
 
 @app.route('/')
 @app.route('/home')
@@ -51,10 +64,8 @@ def submit_data():
         if unit == "crores":
             price *= 100
 
-        # connection, cursor = createConnection()
-        # executeQuery(f'INSERT INTO data VALUES(default, {BHK}, {sqft}, "{area}", "{house_type}", {price});', connection, cursor)
-        with open('static/test.csv', 'a') as f:
-            f.write(f'{BHK},{sqft},{area},{house_type},{price}\n')
+        connection, cursor = createConnection()
+        executeQuery(f'INSERT INTO data VALUES(default, {BHK}, {sqft}, "{area}", "{house_type}", {price});', connection, cursor)
         
         flash('Data submitted successfully!', 'info')
         return redirect('/submit_data')
