@@ -38,7 +38,6 @@
 						</li>
 					</ul>
 				</div>
-			</div>
 			<ul class="navbar-nav ml-auto">
 				{% if 'username'  in session %}
 					<li class="nav-item">
@@ -53,17 +52,18 @@
 					</li>
 				{% endif %}
 			</ul>
+			</div>
 		</nav>
 
 		<!-- <div class="container mt-3"> -->
 		<div class="container" style="padding-top: 70px;">
-		{% with messages = get_flashed_messages(with_categories=True) %}
-						{% if messages %}
-								{% for category, message in messages %}
-										<center><h4 class="{{ category }}">{{ message }}</h4></center>
-								{% endfor %}
-							{% endif %}
-				{% endwith %}
+			{% with messages = get_flashed_messages(with_categories=True) %}
+				{% if messages %}
+					{% for category, message in messages %}
+						<center><h4 class="{{ category }}">{{ message }}</h4></center>
+					{% endfor %}
+				{% endif %}
+			{% endwith %}
 			{% block body %}
 			{% endblock %}
 		</div>
