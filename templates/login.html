@@ -1,0 +1,89 @@
+<html>
+	<head>
+		<title>HPP - Login</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../static/assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="../static/assets/css/noscript.css" /></noscript>
+		<link rel="stylesheet" href="../static/css/category.css">
+		<link rel="shotcut icon" href="static/img/logo.jpeg" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Page Wrapper -->
+			<div id="page-wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<h1><a href="/">House Price Prediction</a></h1>
+						<nav>
+							<a href="#menu">Menu</a>
+						</nav>
+					</header>
+
+				<!-- Menu -->
+					<nav id="menu">
+						<div class="inner">
+							<h2>Menu</h2>
+							<ul class="links">
+								<li><a href="/">Home</a></li>
+								<li><a href="/predict">Predict Price</a></li>
+								<li><a href="/submit_data">Submit data</a></li>
+								{% if 'username' not in session %}
+									<li><a href="/login">Log In</a></li>
+									<li><a href="/signup">Sign Up</a></li>
+								{% endif %}
+								{% if 'admin' in session %}
+									<li><a href="/display">User submitted data</a></li>
+								{% endif %}
+								{% if 'username' in session %}
+									<li><a href="/logout">Log out</a></li>
+								{% endif %}
+							</ul>
+							<a href="#" class="close">Close</a>
+						</div>
+					</nav>
+
+				<!-- Wrapper -->
+					<section id="wrapper">
+						<header>
+							<div class="inner">
+								<h2>Login</h2>
+								{% with messages = get_flashed_messages(with_categories=True) %}
+									{% if messages %}
+										{% for category, message in messages %}
+											<center><h3 class="{{ category }}">{{ message }}</h3></center>
+										{% endfor %}
+									{% endif %}
+								{% endwith %}
+									<form method="post" action="/login">
+										<div class="fields">
+											<div class="field">
+												<label for="uname">Username</label>
+												<input type="text" name="uname" id="uname" />
+											</div>
+											<div class="field">
+												<label for="passwd">Password</label>
+												<input type="password" name="passwd" id="passwd" />
+											</div>
+										</div>
+										<ul class="actions">
+											<li><input type="submit" value="Log in" /></li>
+										</ul>
+									</form>
+							</div>
+						</header>
+
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="../static/assets/js/jquery.min.js"></script>
+			<script src="../static/assets/js/jquery.scrollex.min.js"></script>
+			<script src="../static/assets/js/browser.min.js"></script>
+			<script src="../static/assets/js/breakpoints.min.js"></script>
+			<script src="../static/assets/js/util.js"></script>
+			<script src="../static/assets/js/main.js"></script>
+
+	</body>
+</html>

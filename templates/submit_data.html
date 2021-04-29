@@ -1,10 +1,11 @@
 <html>
 	<head>
-		<title>HPP - Predict price</title>
+		<title>HPP - Submit data</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="../static/assets/css/main.css" />
 		<noscript><link rel="stylesheet" href="../static/assets/css/noscript.css" /></noscript>
+		<link rel="stylesheet" href="../static/css/category.css">
 		<link rel="shotcut icon" href="static/img/logo.jpeg" />
 	</head>
 	<body class="is-preload">
@@ -47,8 +48,8 @@
 					<section id="wrapper">
 						<header>
 							<div class="inner">
-								<h2>predict price</h2>
-								<p>Enter the required parameters to get a price predicted by the model.</p>
+								<h2>Submit data</h2>
+								<p>Enter the data of property you have recently sold or purchased which will be used to train the machine learning model further.</p>
 							</div>
 						</header>
 
@@ -56,7 +57,14 @@
 							<div class="wrapper">
 								<div class="inner">
 									<h3 class="major">Enter data</h3>
-										<form method="post" action="/predict">
+									{% with messages = get_flashed_messages(with_categories=True) %}
+										{% if messages %}
+											{% for category, message in messages %}
+												<center><h3 class="{{ category }}">{{ message }}</h3></center>
+											{% endfor %}
+										{% endif %}
+									{% endwith %}
+										<form method="post" action="/submit_data">
 											<div class="fields">
 												<div class="field">
 													<label for="BHK">BHK</label>
@@ -82,30 +90,18 @@
 														{% endfor %}
 													</select>
 												</div>
+												<div class="field">
+													<label for="price">Price (in lakhs)</label>
+													<input type="number" step="0.01" name="price" id="price" />
+												</div>
 											</div>
 											<ul class="actions">
 												<li><input type="submit" value="Submit data" /></li>
 											</ul>
 										</form>
-									{% if price != 0 %}
-										<p style="font-size: 29px;"><b>Price of property with given paramters is {{ price }} Lakhs INR.</b></p>
-									{% endif %}
 								</div>
 							</div>
-
 					</section>
-
-				<!-- Footer -->
-					<section id="footer">
-						<div class="inner">
-							<h3 class="major">How it works</h3>
-							<p>The machine learning model linear regression will be trained using the cleaned and processed data. This data is over 8500 rows long! Model will train it self using all this data. The equation using which data is trained is show below</p>
-							<img src="../static/img/equation.png">
-							<p style="padding-top: 40px">The sub-type of linear regression called multiple linear regression will be used as we have multiple columns of data which is used to get a single column of output. The model will train itself with all the columns. The graph which shows the corrolation between square feet and the price of an property is shown below. We have created this graph using the scraped data to show the amount of data collected as well as how this model works.</p>
-							<img src="../static/img/graph.png" height="900">
-						</div>
-					</section>
-
 			</div>
 
 		<!-- Scripts -->

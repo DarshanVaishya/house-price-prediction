@@ -1,68 +1,46 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 from flask import request, Flask, render_template, redirect, flash, session
 import numpy as np
 import pymysql
 from passlib.hash import sha512_crypt
-
-# TODO: Re-add the login requirement to the submit data page.
-# TODO: Implement the accept or reject logic
-# TODO: Implement addition of user submitted data into the database
 
 app = Flask(__name__)
 app.secret_key = "b'J\xcb\x01V{/4\xab\x1e\xd5\xbd\xbb\x9b\xe2\xba\xc0'"
 model, types, columns = 0, 0, 0
 
 
-# New UI
-@app.route('/test')
-def test():
-    return render_template('index.html')
-@app.route('/generic')
-def generic():
-    return render_template("generic.html")
-@app.route('/elements')
-def elements():
-    return render_template("elements.html")
-
-
 @app.route('/')
 @app.route('/home')
 def home():
-    return render_template('home.html', home="active")
+    return render_template('index.html')
 
-@app.route("/predict")
-def index():
+@app.route("/predict", methods=['GET', 'POST'])
+def predict():
     global types, columns
-    return render_template('predict.html', area=columns[3:], house_type=types, predict="active")
-
-@app.route('/result', methods=['POST'])
-def predictValue():
-    area = request.form['area']
-    BHK = request.form['BHK']
-    sqft = request.form['sqft']
-    house_type = request.form['type']
-
-    price = predict_value(area, house_type, BHK, sqft)
-    return render_template('result.html', area=area, BHK=BHK, sqft=sqft, htype=house_type, price=price)
+    price = 0
+    if request.method == 'POST':
+        area = request.form['area']
+        BHK = request.form['BHK']
+        sqft = request.form['sqft']
+        house_type = request.form['type']
+        price = predict_value(area, house_type, BHK, sqft)
+    return render_template('predict.html', area=columns[3:], house_type=types, predict="active", price=price)
 
 @app.route('/submit_data', methods=['GET', 'POST'])
 def submit_data():
     if request.method == "GET":
-        # if 'username' in session:
-        global types, columns
-        return render_template('submit.html', area=columns[3:], house_type=types, sd="active")
-        # else:
-        #     flash("User must be logged in to access that page.", 'alert')
-        #     return redirect('/login')
+        if 'username' in session:
+            global types, columns
+            return render_template('submit_data.html', area=columns[3:], house_type=types, sd="active")
+        else:
+            flash("User must be logged in to access that page.", 'alert')
+            return redirect('/login')
     elif request.method == "POST":
         area = request.form['area']
         BHK = request.form['BHK']
         sqft = request.form['sqft']
         house_type = request.form['type']
         price = float(request.form['price'])
-        unit = request.form['unit']
-        if unit == "crores":
-            price *= 100
 
         connection, cursor = createConnection()
         executeQuery(f'INSERT INTO data VALUES(default, {BHK}, {sqft}, "{area}", "{house_type}", {price});', connection, cursor)
@@ -71,7 +49,7 @@ def submit_data():
         return redirect('/submit_data')
         
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/signup', methods=['GET', 'POST'])
 def register():
     """Rendering and backend of the register page"""
     if request.method == 'POST':
@@ -85,15 +63,15 @@ def register():
 
         if result != ():
             flash('Username is taken!', 'error')
-            return redirect('/register')
+            return redirect('/signup')
         elif passwd != cpasswd:
             flash('Both passwords do not match', 'alert')
-            return redirect('/register')
+            return redirect('/signup')
         else:
             passwd = sha512_crypt.hash(passwd)
             executeQuery(f'INSERT INTO users values(default, "{uname}", "{passwd}", "{email}", "user");', connection, cursor)
             flash("Successfully registered!", 'info')
-            return redirect('/register')
+            return redirect('/signup')
     elif request.method == 'GET':
         return render_template('register.html')
 
@@ -112,6 +90,11 @@ def login():
             if sha512_crypt.verify(passwd, result[0][0]):
                 flash("Successfully logged in!", "info")
                 session['username'] = uname
+                
+                result = executeQuery(f"SELECT type FROM users WHERE username='{uname}'", connection, cursor)
+                if result[0][0] == 'admin':
+                    session['admin'] = uname
+
                 return redirect('/login')
             else:
                 flash("Wrong password", "error")
@@ -123,21 +106,37 @@ def login():
 def logout():
     """Logs out the user from session"""
     session.pop('username', None)
+    if 'admin' in session:
+        session.pop('admin', None)
     flash("Successfully logged out!", "info")
     return redirect('/login')
 
 @app.route('/display')
 def display():
-    # if 'username' in session:
-    #     connection, cursor = createConnection()
-    #     result = executeQuery("SELECT * FROM data;", connection, cursor)
-    # data = 0
-    with open('static/test.csv', 'r') as f:
-        data = [x.split(',') for x in f.read().split('\n')]
-    return render_template('display.html', disp="active", data=data)
-    # else:
-    #     flash("User must be logged in to access that page.", 'alert')
-    #     return redirect('/login')
+    if 'username' in session:
+        connection, cursor = createConnection()
+        result = executeQuery("SELECT * FROM data;", connection, cursor)
+        return render_template('display.html', disp="active", data=result)
+    else:
+        flash("User must be logged in to access that page.", 'alert')
+        return redirect('/login')
+
+@app.route('/process', methods=['GET'])
+def approve():
+    action = request.args.get('action')
+    row_id = request.args.get('id')
+    connection, cursor = createConnection()
+    if action == "accept":
+        result = executeQuery("SELECT * FROM data WHERE id={}".format(row_id), connection, cursor)[0]
+        result = ",".join(list(map(str, [result[3], result[4], result[1], result[2], result[-1], 'L'])))
+        with open('static/data.csv', 'a') as f:
+            f.write(result + '\n')
+        flash('Successfully added the row into the database', 'info')
+    elif action == "reject":
+        flash('Data has been rejected successfully!', 'info')
+    executeQuery("DELETE FROM data WHERE id={}".format(row_id), connection, cursor)
+    return redirect('/display')
+
 
 def predict_value(area: list, house_type: list, BHK: int, sqft: int) -> str:
     """Runs the ML model for given set of parameters and returns the predicted value"""
