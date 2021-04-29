@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}HPP - Predict price{% endblock %}
+
+{% block body %}
+<h1 class="pb-3">Enter the data for prediction</h1>
+<div for="form">
+	<form id="form_login" action="/result" method="post">
+		<div class="form-group row py-2">
+			<label class="col-sm-2 col-form-label col-form-label-lg">BHK</label>
+			<div class="col-sm-10">
+				<input type="number" class="form-control" name="BHK" placeholder="BHK" required>
+			</div>
+		</div>
+		<div class="form-group row py-2">
+			<label class="col-sm-2 col-form-label col-form-label-lg">Square Feet</label>
+			<div class="col-sm-10">
+				<input type="number" class="form-control" name="sqft" placeholder="Square Feet" required>
+			</div>
+		</div>
+		<div class="form-group row py-2">
+			<label class="col-sm-2 col-form-label col-form-label-lg">Area</label>
+			<div class="col-sm-10">
+				<select name="area" class="form-select" aria-label="Default select example">
+					{% for item in area %}
+						<option>{{ item }}</option>
+					{% endfor %}
+				</select>
+				<div class="form-text">Select other if your area is not in the list.</div>
+			</div>
+		</div>
+		<div class="form-group row py-2">
+			<label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">House type</label>
+			<div class="col-sm-10">
+				<select name="type" class="form-select" aria-label="Default select example">
+					{% for item in house_type %}
+						<option>{{ item }}</option>
+					{% endfor %}
+				</select>
+			</div>
+		</div>
+		<div class="form-group row py-3">
+			<button type="submit" class="btn btn-primary">Submit</button>
+		</div>
+	</form>
+</div>
+<div style="padding-top: 50px;" for="instructions">
+	<h1>Tutorial</h1>
+
+</div>
+{% endblock %}
+
+<!--	<form id="form_login" action="/process" method="post">
+		<table>
+			<tr>
+				<td><b>Enter BHK:</b></td>
+				<td><input type="number" name="BHK" required><br></td>
+			</tr>
+			<tr>
+				<td><b>Enter square feet:</b></td>
+				<td><input type="number" name="sqft" required><br></td>
+			</tr>
+			
+			<tr>
+				<td><b>Enter area:</b></td>
+				<td><select name="area">
+					{% for item in area %}
+						<option>{{ item }}</option>
+					{% endfor %}
+				</select><br></td>
+			</tr>
+			
+			<tr>
+				<td><b>Enter type:</b></td>
+				<td><select name="type">
+					{% for item in house_type %}
+						<option>{{ item }}</option>
+					{% endfor %}
+				</select><br></td>
+			</tr>
+
+			<tr><td>	</td><td>
+				<input type="submit" value="submit">
+			</td></tr>
+		</table>
+</form> -->

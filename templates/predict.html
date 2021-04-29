@@ -1,85 +1,145 @@
-{% extends "base.html" %}
-{% block title %}HPP - Predict price{% endblock %}
+<!DOCTYPE HTML>
+<!--
+	Solid State by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Generic - Solid State by HTML5 UP</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../static/assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="../static/assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
 
-{% block body %}
-<h1 class="pb-3">Enter the data for prediction</h1>
-<div for="form">
-	<form id="form_login" action="/result" method="post">
-		<div class="form-group row py-2">
-			<label class="col-sm-2 col-form-label col-form-label-lg">BHK</label>
-			<div class="col-sm-10">
-				<input type="number" class="form-control" name="BHK" placeholder="BHK" required>
-			</div>
-		</div>
-		<div class="form-group row py-2">
-			<label class="col-sm-2 col-form-label col-form-label-lg">Square Feet</label>
-			<div class="col-sm-10">
-				<input type="number" class="form-control" name="sqft" placeholder="Square Feet" required>
-			</div>
-		</div>
-		<div class="form-group row py-2">
-			<label class="col-sm-2 col-form-label col-form-label-lg">Area</label>
-			<div class="col-sm-10">
-				<select name="area" class="form-select" aria-label="Default select example">
-					{% for item in area %}
-						<option>{{ item }}</option>
-					{% endfor %}
-				</select>
-				<div class="form-text">Select other if your area is not in the list.</div>
-			</div>
-		</div>
-		<div class="form-group row py-2">
-			<label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">House type</label>
-			<div class="col-sm-10">
-				<select name="type" class="form-select" aria-label="Default select example">
-					{% for item in house_type %}
-						<option>{{ item }}</option>
-					{% endfor %}
-				</select>
-			</div>
-		</div>
-		<div class="form-group row py-3">
-			<button type="submit" class="btn btn-primary">Submit</button>
-		</div>
-	</form>
-</div>
-<div style="padding-top: 50px;" for="instructions">
-	<h1>Tutorial</h1>
+		<!-- Page Wrapper -->
+			<div id="page-wrapper">
 
-</div>
-{% endblock %}
+				<!-- Header -->
+					<header id="header">
+						<h1><a href="/test">House Price Prediction</a></h1>
+						<nav>
+							<a href="#menu">Menu</a>
+						</nav>
+					</header>
 
-<!--	<form id="form_login" action="/process" method="post">
-		<table>
-			<tr>
-				<td><b>Enter BHK:</b></td>
-				<td><input type="number" name="BHK" required><br></td>
-			</tr>
-			<tr>
-				<td><b>Enter square feet:</b></td>
-				<td><input type="number" name="sqft" required><br></td>
-			</tr>
-			
-			<tr>
-				<td><b>Enter area:</b></td>
-				<td><select name="area">
-					{% for item in area %}
-						<option>{{ item }}</option>
-					{% endfor %}
-				</select><br></td>
-			</tr>
-			
-			<tr>
-				<td><b>Enter type:</b></td>
-				<td><select name="type">
-					{% for item in house_type %}
-						<option>{{ item }}</option>
-					{% endfor %}
-				</select><br></td>
-			</tr>
+				<!-- Menu -->
+					<nav id="menu">
+						<div class="inner">
+							<h2>Menu</h2>
+							<ul class="links">
+								<li><a href="/index">Home</a></li>
+								<li><a href="/generic">Generic</a></li>
+								<li><a href="/elements">Elements</a></li>
+								<li><a href="#">Log In</a></li>
+								<li><a href="#">Sign Up</a></li>
+							</ul>
+							<a href="#" class="close">Close</a>
+						</div>
+					</nav>
 
-			<tr><td>	</td><td>
-				<input type="submit" value="submit">
-			</td></tr>
-		</table>
-</form> -->
+				<!-- Wrapper -->
+					<section id="wrapper">
+						<header>
+							<div class="inner">
+								<h2>predict price</h2>
+								<p>Enter the required parameters to get a price predicted by the model.</p>
+							</div>
+						</header>
+
+						<!-- Content -->
+							<div class="wrapper">
+								<div class="inner">
+									<h3 class="major">Enter data</h3>
+									<form method="post" action="/result">
+										<div class="fields">
+											<div class="field">
+												<label for="BHK">BHK</label>
+												<input type="text" name="BHK" id="BHK" />
+											</div>
+											<div class="field">
+												<label for="sqft">Square feet</label>
+												<input type="text" name="sqft" id="sqft" />
+											</div>
+											<div class="field">
+												<label for="area">Area</label>
+												<select name="area" class="form-select" aria-label="Default select example">
+													{% for item in area %}
+														<option>{{ item }}</option>
+													{% endfor %}
+												</select>
+											</div>
+											<div class="field">
+												<label for="message">Message</label>
+												<select name="type" class="form-select" aria-label="Default select example">
+													{% for item in house_type %}
+														<option>{{ item }}</option>
+													{% endfor %}
+												</select>
+											</div>
+										</div>
+										<ul class="actions">
+											<li><input type="submit" value="Submit data" /></li>
+										</ul>
+									</form>
+								</div>
+							</div>
+
+					</section>
+
+				<!-- Footer -->
+					<section id="footer">
+						<div class="inner">
+							<h3 class="major">How it works</h3>
+							<p>The machine learning model linear regression will be trained using the cleaned and processed data. This data is over 8500 rows long! Model will train it self using all this data. The equation using which data is trained is show below</p>
+							<img src="../static/img/equation.png">
+							<p>The sub-type of linear regression called multiple linear regression will be used as we have multiple columns of data which is used to get a single column of output. The model will train itself with all the columns. The graph which shows the corrolation between square feet and the price of an property is shown below. We have created this graph using the scraped data to show the amount of data collected as well as how this model works.</p>
+							<img src="../static/img/graph.png" height="900">
+							<section class="features">
+								<article>
+									<a href="#" class="image"><img src="../static/images/pic04.jpg" alt="" /></a>
+									<h3 class="major">Sed feugiat lorem</h3>
+									<p>Lorem ipsum dolor sit amet, consectetur adipiscing vehicula id nulla dignissim dapibus ultrices.</p>
+									<a href="#" class="special">Learn more</a>
+								</article>
+								<article>
+									<a href="#" class="image"><img src="../static/images/pic05.jpg" alt="" /></a>
+									<h3 class="major">Nisl placerat</h3>
+									<p>Lorem ipsum dolor sit amet, consectetur adipiscing vehicula id nulla dignissim dapibus ultrices.</p>
+									<a href="#" class="special">Learn more</a>
+								</article>
+							</section>
+							<h2 class="major">Get in touch</h2>
+							<p>Cras mattis ante fermentum, malesuada neque vitae, eleifend erat. Phasellus non pulvinar erat. Fusce tincidunt, nisl eget mattis egestas, purus ipsum consequat orci, sit amet lobortis lorem lacus in tellus. Sed ac elementum arcu. Quisque placerat auctor laoreet.</p>
+							<ul class="contact">
+								<li class="icon solid fa-home">
+									Untitled Inc<br />
+									1234 Somewhere Road Suite #2894<br />
+									Nashville, TN 00000-0000
+								</li>
+								<li class="icon solid fa-phone">(000) 000-0000</li>
+								<li class="icon solid fa-envelope"><a href="#">information@untitled.tld</a></li>
+								<li class="icon brands fa-twitter"><a href="#">twitter.com/untitled-tld</a></li>
+								<li class="icon brands fa-facebook-f"><a href="#">facebook.com/untitled-tld</a></li>
+								<li class="icon brands fa-instagram"><a href="#">instagram.com/untitled-tld</a></li>
+							</ul>
+							<ul class="copyright">
+								<li>&copy; Untitled Inc. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+							</ul>
+						</div>
+					</section>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="../static/assets/js/jquery.min.js"></script>
+			<script src="../static/assets/js/jquery.scrollex.min.js"></script>
+			<script src="../static/assets/js/browser.min.js"></script>
+			<script src="../static/assets/js/breakpoints.min.js"></script>
+			<script src="../static/assets/js/util.js"></script>
+			<script src="../static/assets/js/main.js"></script>
+
+	</body>
+</html>
